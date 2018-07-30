@@ -13,7 +13,7 @@ ANSIBLE_DEFAULT_DIR="/etc/ansible/hosts"
 GUID="hostname|awk -F. '{print $2}'"
 
 echo "Copying inventory file to /etc/ansible/hosts..."
-cp ANSIBLE_DIR ANSIBLE_DEFAULT_DIR
+cp $ANSIBLE_DIR $ANSIBLE_DEFAULT_DIR
 
 echo "Setting GUID in inventory file..."
-sed -i "s/GUID/$GUID/g" ANSIBLE_DEFAULT_DIR
+sed -i "s/GUID/$GUID/g" $ANSIBLE_DEFAULT_DIR
