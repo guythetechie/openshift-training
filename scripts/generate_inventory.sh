@@ -10,7 +10,7 @@ ANSIBLE_DIR="$HOME_DIR/ansible_inventory"
 # Path of default ansible directory
 ANSIBLE_DEFAULT_DIR="/etc/ansible/hosts"
 # GUID
-GUID="hostname|awk -F. '{print $2}'"
+GUID=`hostname|awk -F. '{print $2}'`
 
 echo "Copying inventory file to /etc/ansible/hosts..."
 cp $ANSIBLE_DIR $ANSIBLE_DEFAULT_DIR
