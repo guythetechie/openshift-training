@@ -15,7 +15,7 @@ loadbalancer.GUID.internal
 [infrastructure_nodes]
 infranode1.GUID.internal
 infranode2.GUID.internal
-[infrastructurenodes:vars]
+[infrastructure_nodes:vars]
 openshift_node_labels="{'logging':'true','cluster': 'GUID', 'env':'infra'}"
 
 [application_nodes]
@@ -24,12 +24,12 @@ node2.GUID.internal openshift_node_labels="{'logging':'true','cluster': 'GUID', 
 node3.GUID.internal openshift_node_labels="{'logging':'true','cluster': 'GUID', 'env':'app', 'client':'common'}"
 
 [nfs]
-support1.3dcc.internal
+support1.GUID.internal
 
 [nodes:children]
 masters
-infranodes
-applicationnodes
+infrastructure_nodes
+application_nodes
 
 [OSEv3:children]
 masters
