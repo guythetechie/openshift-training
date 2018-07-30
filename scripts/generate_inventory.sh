@@ -16,4 +16,4 @@ echo "Copying inventory file to /etc/ansible/hosts..."
 cp ANSIBLE_DIR ANSIBLE_DEFAULT_DIR
 
 echo "Setting GUID in inventory file..."
-sed -i "s/GUID/$GUID/g" /etc/ansible/hosts
+sed -i "s/GUID/$GUID/g" ANSIBLE_DEFAULT_DIR
