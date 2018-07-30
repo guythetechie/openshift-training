@@ -1,0 +1,134 @@
+[lb]
+loadbalancer1.3dcc.internal
+
+[masters]
+master1.3dcc.internal
+master2.3dcc.internal
+master3.3dcc.internal
+[masters:vars]
+openshift_node_labels="{'logging':'true','openshift_schedulable':'False','cluster': '3dcc'}"
+
+[infranodes]
+infranode1.3dcc.internal
+infranode2.3dcc.internal
+[infranodes:vars]
+openshift_node_labels="{'logging':'true','cluster': '3dcc', 'env':'infra'}"
+
+[etcd:children]
+masters
+
+[nodes:children]
+masters
+applicationnodes
+infranodes
+
+[applicationnodes]
+node1.3dcc.internal
+node2.3dcc.internal
+node3.3dcc.internal
+[applicationnodes:vars]
+openshift_node_labels="{'logging':'true','cluster': '3dcc', 'env':'app'}"
+
+[nfs]
+support1.3dcc.internal
+
+[OSEv3:children]
+masters
+nodes
+lb
+etcd
+
+[OSEv3:vars]
+# General settings
+openshift_hostname={{inventory_hostname}}
+timeout=60
+
+# Ansible user settings
+## Set whether playbook should run as root
+ansible_become=yes
+## Set user used to connect to node
+ansible_ssh_user=ec2-user
+
+# Deployment modes
+deployment_type=openshift-enterprise
+containerized=false
+
+# Disable checks
+openshift_disable_check="disk_availability,memory_availability"
+
+# Default node label where pods should run
+osm_default_node_selector='env=app'
+
+# Additional projects to create
+openshift_additional_projects={'my-infra-project-test': {'default_node_selector': 'env=apps'}}
+
+# Master variables
+openshift_master_api_port=443  
+openshift_master_console_port=443
+openshift_master_cluster_method=native 
+openshift_master_cluster_hostname=loadbalancer1.3dcc.internal 
+openshift_master_cluster_public_hostname=loadbalancer.3dcc.example.opentlc.com 
+openshift_master_default_subdomain=apps.3dcc.example.opentlc.com
+
+# Network variables
+#osm_cluster_network_cidr=10.1.0.0/16 
+#openshift_portal_net=172.30.0.0/16 
+#os_sdn_network_plugin_name='redhat/openshift-ovs-multitenant'
+os_sdn_network_plugin_name='redhat/openshift-ovs-subnet'
+
+# OSE authentication variables
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}] 
+# Defining htpasswd users
+#openshift_master_htpasswd_users={'user1': '<pre-hashed password>', 'user2': '<pre-hashed password>'}
+# or
+openshift_master_htpasswd_file=/root/htpasswd.openshift
+
+# Metric variables
+openshift_metrics_install_metrics=True 
+openshift_metrics_storage_kind=nfs 
+openshift_metrics_storage_access_modes=['ReadWriteOnce'] 
+openshift_metrics_storage_nfs_directory=/srv/nfs  
+openshift_metrics_storage_nfs_options='*(rw,root_squash)' 
+openshift_metrics_storage_volume_name=metrics 
+openshift_metrics_storage_volume_size=10Gi 
+openshift_metrics_storage_labels={'storage': 'metrics'} 
+openshift_metrics_cassandra_nodeselector={"env":"infra"} 
+openshift_metrics_hawkular_nodeselector={"env":"infra"} 
+openshift_metrics_heapster_nodeselector={"env":"infra"} 
+
+# Logging variables
+openshift_logging_install_logging=True 
+openshift_logging_storage_kind=nfs  
+openshift_logging_storage_access_modes=['ReadWriteOnce']  
+openshift_logging_storage_nfs_directory=/srv/nfs 
+openshift_logging_storage_nfs_options='*(rw,root_squash)' 
+openshift_logging_storage_volume_name=logging 
+openshift_logging_storage_volume_size=10Gi 
+openshift_logging_storage_labels={'storage': 'logging'} 
+# openshift_logging_kibana_hostname=kibana.apps.3dcc.example.opentlc.com
+openshift_logging_es_cluster_size=1
+openshift_logging_es_nodeselector={"env":"infra"} 
+openshift_logging_kibana_nodeselector={"env":"infra"} 
+openshift_logging_curator_nodeselector={"env":"infra"}
+
+# Router variables
+openshift_hosted_router_selector='env=infra' 
+openshift_hosted_router_replicas=2
+
+# Registry variables
+openshift_hosted_registry_selector='env=infra' 
+openshift_hosted_registry_replicas=1 
+openshift_hosted_registry_storage_kind=nfs 
+openshift_hosted_registry_storage_access_modes=['ReadWriteMany']
+openshift_hosted_registry_storage_nfs_directory=/srv/nfs
+openshift_hosted_registry_storage_nfs_options='*(rw,root_squash)'
+openshift_hosted_registry_storage_volume_name=registry
+openshift_hosted_registry_storage_volume_size=20Gi
+
+# Service catalog variables
+openshift_enable_service_catalog=true 
+ansible_service_broker_install=false 
+template_service_broker_install=true 
+template_service_broker_selector={"env":"infra"} 
+openshift_additional_projects={'openshift-template-service-broker': {'default_node_selector': ''}} 
+openshift_template_service_broker_namespaces=['openshift']

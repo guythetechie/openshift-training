@@ -1,0 +1,70 @@
+## Hosts
+[masters]
+master1.GUID.internal
+master2.GUID.internal
+master3.GUID.internal
+[masters:vars]
+openshift_node_labels="{'logging':'true','openshift_schedulable':'False','cluster': 'GUID'}"
+
+[etcd:children]
+masters
+
+[lb]
+loadbalancer.GUID.internal
+
+[infrastructure_nodes]
+infranode1.GUID.internal
+infranode2.GUID.internal
+[infrastructurenodes:vars]
+openshift_node_labels="{'logging':'true','cluster': 'GUID', 'env':'infra'}"
+
+[application_nodes]
+node1.GUID.internal openshift_node_labels="{'logging':'true','cluster': 'GUID', 'env':'app', 'client':'alpha'}"
+node2.GUID.internal openshift_node_labels="{'logging':'true','cluster': 'GUID', 'env':'app', 'client':'beta'}"
+node3.GUID.internal openshift_node_labels="{'logging':'true','cluster': 'GUID', 'env':'app', 'client':'common'}"
+
+[nfs]
+support1.3dcc.internal
+
+[nodes:children]
+masters
+infranodes
+applicationnodes
+
+[OSEv3:children]
+masters
+etcd
+lb
+nodes
+
+## Openshift variables
+[OSEv3:vars]
+
+# General settings
+openshift_hostname={{inventory_hostname}}
+timeout=60
+
+# Ansible user settings
+## Playbook should run as root
+ansible_become=yes
+
+# Deployment modes
+deployment_type=openshift-enterprise
+containerized=false
+
+# Disable disk and memory checks
+openshift_disable_check="disk_availability,memory_availability"
+
+# Router variables
+openshift_hosted_router_selector='env=infra' 
+openshift_hosted_router_replicas=2
+
+# Registry variables
+openshift_hosted_registry_selector='env=infra' 
+openshift_hosted_registry_replicas=1 
+openshift_hosted_registry_storage_kind=nfs 
+openshift_hosted_registry_storage_access_modes=['ReadWriteMany']
+openshift_hosted_registry_storage_nfs_directory=/srv/nfs
+openshift_hosted_registry_storage_nfs_options='*(rw,root_squash)'
+openshift_hosted_registry_storage_volume_name=registry
+openshift_hosted_registry_storage_volume_size=20Gi
