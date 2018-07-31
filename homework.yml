@@ -72,10 +72,10 @@
         state: present
 
 - name: Check OpenShift pre-requisites
-  import_playbook: /usr/share/ansible/OpenShift-ansible/playbooks/prerequisites.yml
+  import_playbook: /usr/share/ansible/openshift-ansible/playbooks/prerequisites.yml
 
 - name: Run OpenShift installer
-  import_playbook: /usr/share/ansible/OpenShift-ansible/playbooks/deploy_cluster.yml
+  import_playbook: /usr/share/ansible/openshift-ansible/playbooks/deploy_cluster.yml
 
 - name: Verify OpenShift installation
   hosts: localhost
