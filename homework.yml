@@ -67,18 +67,24 @@
 
 - name: Check OpenShift pre-requisites
   import_playbook: /usr/share/ansible/openshift-ansible/playbooks/prerequisites.yml
+  when: "a" == "b"
 
 - name: Run OpenShift installer
   import_playbook: /usr/share/ansible/openshift-ansible/playbooks/deploy_cluster.yml
+  when: "a" == "b"
 
-- name: Verify OpenShift installation
-  hosts: localhost
+- name: Copy .kube directory from master to bastion
+  hosts: masters[0]
   tasks:
-    - name: Copy .kube directory from master1 to bastion
-      synchronize:
+    - name: Copy .kube directory
+      fetch:
         src: /root/.kube/config
         dest: /root/.kube/config
-      delegate_to: masters[0]
+        flat: yes
+
+- name: Validate OSE admin login
+  hosts: localhost
+  tasks:
     - name: Validate that oc admin command returns systemadmin
       shell: oc whoami | grep system:admin
 
@@ -107,3 +113,11 @@
       shell: docker pull registry.access.redhat.com/openshift3/ose-recycler:latest
     - name: Tag latest container image
       shell: docker tag registry.access.redhat.com/openshift3/ose-recycler:latest registry.access.redhat.com/openshift3/ose-recycler:v3.9.30
+
+- name: Smoke test
+  hosts: localhost
+  tasks:
+    - name: Create new project
+      shell: oc new-project smoke-test
+    - name: Create Node.JS application
+      shell: oc new-app nodejs-mongo-persistent
