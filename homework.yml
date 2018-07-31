@@ -50,6 +50,7 @@
       get_url:
         url: http://ipa.shared.example.opentlc.com/ipa/config/ca.crt
         dest: "{{tempfilepath}}"
+        force: yes
     - name: Replace CA certificate path in ansible inventory
       replace:
         path: "{{default_inventory_file}}"
