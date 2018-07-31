@@ -1,0 +1,19 @@
+---
+- name: Generate inventory file on bastion
+  hosts: localhost
+  vars:
+    guid: temporaryvalue
+    default_inventory_file: /etc/ansible/hosts
+  tasks:
+    - name: Copy inventory file from source
+      copy:
+        src: "{{playbook_dir}}/ansible_inventory"
+        dest: "{{default_inventory_file}}"
+    - name: Get GUID from host name
+      shell: hostname|awk -F. '{print $2}'
+      register: guid_output
+    - name: Set GUID variable
+      set_fact:
+        guid: "{{guid_output.stdout}}"
+    - name: Replace GUID in ansible inventory
+      shell: "sed -i "s/GUID/{{guid}}/g" {{default_inventory_file}}"
