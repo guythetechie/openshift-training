@@ -42,7 +42,7 @@
     - name: Create temporary file to hold certificate
       tempfile:
         state: file
-        register: tempfile_output
+      register: tempfile_output
     - name: Set temporary file path variable
       set_fact:
         tempfilepath: "{{tempfile_output.path}}"
