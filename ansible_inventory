@@ -10,7 +10,7 @@ openshift_node_labels="{'logging':'true','openshift_schedulable':'False','cluste
 masters
 
 [lb]
-loadbalancer.PLACEHOLDER_GUID.internal
+loadbalancer1.PLACEHOLDER_GUID.internal
 
 [infrastructure_nodes]
 infranode1.PLACEHOLDER_GUID.internal
@@ -59,7 +59,7 @@ openshift_disable_check="disk_availability,memory_availability"
 openshift_master_api_port=443  
 openshift_master_console_port=443
 openshift_master_cluster_method=native 
-openshift_master_cluster_hostname=loadbalancer.PLACEHOLDER_GUID.internal 
+openshift_master_cluster_hostname=loadbalancer1.PLACEHOLDER_GUID.internal 
 openshift_master_cluster_public_hostname=loadbalancer.PLACEHOLDER_GUID.example.opentlc.com 
 openshift_master_default_subdomain=apps.PLACEHOLDER_GUID.example.opentlc.com
 
