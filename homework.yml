@@ -57,5 +57,20 @@
         regexp: 'PLACEHOLDER_CA_FILEPATH'
         replace: "{{tempfilepath}}"
 
-- name: Run Ansible pre-requisites
+- name: Validate Openshift packages on bastion
+  hosts: localhost
+  tasks:
+    - name: Install Openshift utils package if necessary
+      package:
+        name: atomic-openshift-utils
+        state: present
+    - name: Install Openshift clients package if necesary
+      package:
+        name: atomic-openshift-clients
+        state: present
+
+- name: Check Openshift pre-requisites
   import_playbook: /usr/share/ansible/openshift-ansible/playbooks/prerequisites.yml
+
+- name: Run Openshift installer
+  import_playbook: /usr/share/ansible/openshift-ansible/playbooks/deploy_cluster.yml
