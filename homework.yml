@@ -3,6 +3,7 @@
   hosts: localhost
   vars:
     guid: dummyvalue
+    ldap_ca_path: dummyvalue
     default_inventory_file: /etc/ansible/hosts
   tasks:
     - name: Copy inventory file from source
@@ -20,7 +21,24 @@
         path: "{{default_inventory_file}}"
         regexp: 'PLACEHOLDER_GUID'
         replace: "{{guid}}"
-    - name: Reload inventory file to capture GUID updates
+    - name: Create temporary file to hold LDAP certificate
+      tempfile:
+        state: file
+      register: tempfile_output
+    - name: Set LDAP CA file path variable
+      set_fact:
+        ldap_ca_path: "{{tempfile_output.path}}"
+    - name: Download CA certificate
+      get_url:
+        url: http://ipa.shared.example.opentlc.com/ipa/config/ca.crt
+        dest: "{{ldap_ca_path}}"
+        force: yes
+    - name: Replace CA certificate path in ansible inventory
+      replace:
+        path: "{{default_inventory_file}}"
+        regexp: 'PLACEHOLDER_CA_FILEPATH'
+        replace: "{{ldap_ca_path}}"
+    - name: Reload inventory file to capture updates
       meta: refresh_inventory
 
 - name: Validate Docker configuration on nodes
@@ -34,30 +52,6 @@
       service:
         name: docker
         state: started
-
-- name: Configure LDAP authentication
-  hosts: localhost
-  vars:
-    tempfilepath: dummyvalue
-    default_inventory_file: /etc/ansible/hosts
-  tasks:
-    - name: Create temporary file to hold certificate
-      tempfile:
-        state: file
-      register: tempfile_output
-    - name: Set temporary file path variable
-      set_fact:
-        tempfilepath: "{{tempfile_output.path}}"
-    - name: Download CA certificate
-      get_url:
-        url: http://ipa.shared.example.opentlc.com/ipa/config/ca.crt
-        dest: "{{tempfilepath}}"
-        force: yes
-    - name: Replace CA certificate path in ansible inventory
-      replace:
-        path: "{{default_inventory_file}}"
-        regexp: 'PLACEHOLDER_CA_FILEPATH'
-        replace: "{{tempfilepath}}"
 
 - name: Validate OpenShift packages on bastion
   hosts: localhost
@@ -85,3 +79,5 @@
         src: /root/.kube/config
         dest: /root/.kube/config
       delegate_to: masters[0]
+    - name: Validate that oc admin command returns systemadmin
+      shell: oc whoami | grep system:admin
