@@ -2,7 +2,7 @@
 - name: Generate inventory file on bastion
   hosts: localhost
   vars:
-    guid: dummyavlue
+    guid: dummyvalue
     default_inventory_file: /etc/ansible/hosts
   tasks:
     - name: Copy inventory file from source
@@ -20,6 +20,8 @@
         path: "{{default_inventory_file}}"
         regexp: 'PLACEHOLDER_GUID'
         replace: "{{guid}}"
+    - name: Reload inventory file to capture GUID updates
+      meta: refresh_inventory
 
 - name: Validate Docker configuration on nodes
   hosts: nodes
@@ -57,20 +59,29 @@
         regexp: 'PLACEHOLDER_CA_FILEPATH'
         replace: "{{tempfilepath}}"
 
-- name: Validate Openshift packages on bastion
+- name: Validate OpenShift packages on bastion
   hosts: localhost
   tasks:
-    - name: Install Openshift utils package if necessary
+    - name: Install OpenShift utils package if necessary
       package:
-        name: atomic-openshift-utils
+        name: atomic-OpenShift-utils
         state: present
-    - name: Install Openshift clients package if necesary
+    - name: Install OpenShift clients package if necesary
       package:
-        name: atomic-openshift-clients
+        name: atomic-OpenShift-clients
         state: present
 
-- name: Check Openshift pre-requisites
-  import_playbook: /usr/share/ansible/openshift-ansible/playbooks/prerequisites.yml
+- name: Check OpenShift pre-requisites
+  import_playbook: /usr/share/ansible/OpenShift-ansible/playbooks/prerequisites.yml
 
-- name: Run Openshift installer
-  import_playbook: /usr/share/ansible/openshift-ansible/playbooks/deploy_cluster.yml
+- name: Run OpenShift installer
+  import_playbook: /usr/share/ansible/OpenShift-ansible/playbooks/deploy_cluster.yml
+
+- name: Verify OpenShift installation
+  hosts: localhost
+  tasks:
+    - name: Copy .kube directory from master1 to bastion
+      synchronize:
+        src: /root/.kube/config
+        dest: /root/.kube/config
+      delegate_to: masters[0]
