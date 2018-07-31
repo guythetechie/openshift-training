@@ -46,7 +46,7 @@ openshift_hostname={{inventory_hostname}}
 timeout=60
 
 # Ansible user settings
-## Playbook should run as root
+ansible_ssh_user=ec2-user
 ansible_become=yes
 
 # Deployment modes
