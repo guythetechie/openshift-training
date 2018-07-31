@@ -56,3 +56,6 @@
         path: "{{default_inventory_file}}"
         regexp: 'PLACEHOLDER_CA_FILEPATH'
         replace: "{{tempfilepath}}"
+
+- name: Run Ansible pre-requisites
+  import_playbook: /usr/share/ansible/openshift-ansible/playbooks/prerequisites.yml
