@@ -55,9 +55,48 @@ containerized=false
 # Disable disk and memory checks
 openshift_disable_check="disk_availability,memory_availability"
 
+# Master variables
+openshift_master_api_port=443  
+openshift_master_console_port=443
+openshift_master_cluster_method=native 
+openshift_master_cluster_hostname=loadbalancer.PLACEHOLDER_GUID.internal 
+openshift_master_cluster_public_hostname=loadbalancer.PLACEHOLDER_GUID.example.opentlc.com 
+openshift_master_default_subdomain=apps.PLACEHOLDER_GUID.example.opentlc.com
+
+# Network variables
+os_sdn_network_plugin_name='redhat/openshift-ovs-multitenant'
+
 # Router variables
 openshift_hosted_router_selector='env=infra' 
 openshift_hosted_router_replicas=2
+
+# Logging variables
+openshift_logging_install_logging=True 
+openshift_logging_storage_kind=nfs  
+openshift_logging_storage_access_modes=['ReadWriteOnce']  
+openshift_logging_storage_nfs_directory=/srv/nfs 
+openshift_logging_storage_nfs_options='*(rw,root_squash)' 
+openshift_logging_storage_volume_name=logging 
+openshift_logging_storage_volume_size=10Gi 
+openshift_logging_storage_labels={'storage': 'logging'}
+openshift_logging_kibana_hostname=kibana.apps.PLACEHOLDER_GUID.example.opentlc.com
+openshift_logging_es_cluster_size=1
+openshift_logging_es_nodeselector={"env":"infra"} 
+openshift_logging_kibana_nodeselector={"env":"infra"} 
+openshift_logging_curator_nodeselector={"env":"infra"}
+
+# Metric variables
+openshift_metrics_install_metrics=True 
+openshift_metrics_storage_kind=nfs 
+openshift_metrics_storage_access_modes=['ReadWriteOnce'] 
+openshift_metrics_storage_nfs_directory=/srv/nfs  
+openshift_metrics_storage_nfs_options='*(rw,root_squash)' 
+openshift_metrics_storage_volume_name=metrics 
+openshift_metrics_storage_volume_size=10Gi 
+openshift_metrics_storage_labels={'storage': 'metrics'} 
+openshift_metrics_cassandra_nodeselector={"env":"infra"} 
+openshift_metrics_hawkular_nodeselector={"env":"infra"} 
+openshift_metrics_heapster_nodeselector={"env":"infra"} 
 
 # Registry variables
 openshift_hosted_registry_selector='env=infra' 
@@ -68,3 +107,14 @@ openshift_hosted_registry_storage_nfs_directory=/srv/nfs
 openshift_hosted_registry_storage_nfs_options='*(rw,root_squash)'
 openshift_hosted_registry_storage_volume_name=registry
 openshift_hosted_registry_storage_volume_size=20Gi
+
+# Service catalog variables
+openshift_enable_service_catalog=true
+
+# Template service broker variables
+template_service_broker_install=true 
+template_service_broker_selector={"env":"infra"} 
+openshift_template_service_broker_namespaces=['openshift']
+
+# Ansible service broker variables
+ansible_service_broker_install=true

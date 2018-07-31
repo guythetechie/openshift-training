@@ -20,3 +20,15 @@
         path: "{{default_inventory_file}}"
         regexp: 'PLACEHOLDER_GUID'
         replace: "{{guid}}"
+
+- name: Validate Docker configuration
+  hosts: nodes
+  tasks:
+    - name: Validate that Docker is installed on nodes
+      package:
+        name: docker
+        state: present
+    - name: Validate that Docker service is running
+      service:
+        name: docker
+        state: started
