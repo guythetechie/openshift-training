@@ -42,6 +42,7 @@ nodes
 
 # General settings
 openshift_hostname={{inventory_hostname}}
+openshift_deployment_type=openshift-enterprise
 timeout=60
 
 # Ansible user settings
@@ -49,7 +50,6 @@ timeout=60
 ansible_become=yes
 
 # Deployment modes
-openshift_deployment_type=openshift-enterprise
 containerized=false
 
 # Disable disk and memory checks
