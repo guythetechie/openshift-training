@@ -81,3 +81,34 @@
       delegate_to: masters[0]
     - name: Validate that oc admin command returns systemadmin
       shell: oc whoami | grep system:admin
+
+- name: Create PVs on NFS server
+  hosts: nfs
+  tasks:
+    - name: Create PVs
+      script: "{{playbook_dir}}/scripts/create_pvs.sh"
+    - name: Restart NFS service
+      service:
+          name: nfs-server
+          state: restarted
+
+- name: Create PVs on OSE
+  hosts: localhost
+  tasks:
+    - name: Create PV definition files
+      script: "{{playbook_dir}}/scripts/create_pv_definitions.sh"
+    - name: Create PVs
+      shell: cat /root/pvs/* | oc create -f -
+
+- name: Fix NFS persistent volume recycling
+  hosts: localhost
+  tasks:
+    - name: Pull latest container image
+      shell: docker pull registry.access.redhat.com/openshift3/ose-recycler:latest
+    - name: Tag latest container image
+      shell: docker tag registry.access.redhat.com/openshift3/ose-recycler:latest registry.access.redhat.com/openshift3/ose-recycler:v3.9.30
+
+- name: Run smoke test
+  hosts: localhost
+  tasks:
+    - name: 
