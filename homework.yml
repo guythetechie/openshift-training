@@ -64,11 +64,11 @@
   tasks:
     - name: Install OpenShift utils package if necessary
       package:
-        name: atomic-OpenShift-utils
+        name: atomic-openshift-utils
         state: present
     - name: Install OpenShift clients package if necesary
       package:
-        name: atomic-OpenShift-clients
+        name: atomic-openshift-clients
         state: present
 
 - name: Check OpenShift pre-requisites
