@@ -50,6 +50,7 @@ timeout=60
 ansible_become=yes
 
 # Deployment modes
+deployment_type=openshift-enterprise
 openshift_deployment_type=openshift-enterprise
 containerized=false
 
