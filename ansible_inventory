@@ -66,7 +66,7 @@ openshift_master_cluster_public_hostname=loadbalancer.PLACEHOLDER_GUID.example.o
 openshift_master_default_subdomain=apps.PLACEHOLDER_GUID.example.opentlc.com
 
 # Default infra selector
-openshift_hosted_infra_selector={"env":"infra"}
+openshift_hosted_infra_selector='env=infra'
 
 # Authentication variables
 openshift_master_identity_providers=[{'name': 'ldap', 'challenge': 'true', 'login': 'true', 'kind': 'LDAPPasswordIdentityProvider', 'attributes': {'id': ['dn'], 'email': ['mail'], 'name': ['cn'], 'preferredUsername': ['uid']}, 'bindDN': '', 'bindPassword': '', 'ca': 'ipa-ca.crt', 'insecure': 'false', 'url': 'ldaps://ipa.shared.example.opentlc.com:636/cn=users,cn=accounts,dc=shared,dc=example,dc=opentlc,dc=com?uid?sub?(memberOf=cn=ocp-users,cn=groups,cn=accounts,dc=shared,dc=example,dc=opentlc,dc=com)'}]
@@ -76,7 +76,7 @@ openshift_master_ldap_ca_file=PLACEHOLDER_CA_FILEPATH
 os_sdn_network_plugin_name='redhat/openshift-ovs-multitenant'
 
 # Router variables
-openshift_hosted_router_selector={"env":"infra"} 
+openshift_hosted_router_selector='env=infra'  
 openshift_hosted_router_replicas=2
 
 # Logging variables
@@ -90,9 +90,9 @@ openshift_logging_storage_volume_size=10Gi
 openshift_logging_storage_labels={'storage': 'logging'}
 openshift_logging_kibana_hostname=kibana.apps.PLACEHOLDER_GUID.example.opentlc.com
 openshift_logging_es_cluster_size=1
-openshift_logging_es_nodeselector={"env":"infra"} 
-openshift_logging_kibana_nodeselector={"env":"infra"} 
-openshift_logging_curator_nodeselector={"env":"infra"}
+openshift_logging_es_nodeselector='env=infra' 
+openshift_logging_kibana_nodeselector='env=infra' 
+openshift_logging_curator_nodeselector='env=infra'
 
 # Metric variables
 openshift_metrics_install_metrics=True 
@@ -103,12 +103,12 @@ openshift_metrics_storage_nfs_options='*(rw,root_squash)'
 openshift_metrics_storage_volume_name=metrics 
 openshift_metrics_storage_volume_size=10Gi 
 openshift_metrics_storage_labels={'storage': 'metrics'} 
-openshift_metrics_cassandra_nodeselector={"env":"infra"} 
-openshift_metrics_hawkular_nodeselector={"env":"infra"} 
-openshift_metrics_heapster_nodeselector={"env":"infra"} 
+openshift_metrics_cassandra_nodeselector='env=infra' 
+openshift_metrics_hawkular_nodeselector='env=infra' 
+openshift_metrics_heapster_nodeselector='env=infra' 
 
 # Registry variables
-openshift_hosted_registry_selector={"env":"infra"}
+openshift_hosted_registry_selector='env=infra' 
 openshift_hosted_registry_replicas=1 
 openshift_hosted_registry_storage_kind=nfs
 openshift_enable_unsupported_configurations=True
@@ -123,7 +123,7 @@ openshift_enable_service_catalog=true
 
 # Template service broker variables
 template_service_broker_install=true 
-template_service_broker_selector={"env":"infra"} 
+template_service_broker_selector='env=infra'  
 openshift_template_service_broker_namespaces=['openshift']
 
 # Ansible service broker variables
