@@ -1,30 +1,30 @@
 ## Hosts
 [masters]
-master1.GUID.internal
-master2.GUID.internal
-master3.GUID.internal
+master1.PLACEHOLDER_GUID.internal
+master2.PLACEHOLDER_GUID.internal
+master3.PLACEHOLDER_GUID.internal
 [masters:vars]
-openshift_node_labels="{'logging':'true','openshift_schedulable':'False','cluster': 'GUID'}"
+openshift_node_labels="{'logging':'true','openshift_schedulable':'False','cluster': 'PLACEHOLDER_GUID'}"
 
 [etcd:children]
 masters
 
 [lb]
-loadbalancer.GUID.internal
+loadbalancer.PLACEHOLDER_GUID.internal
 
 [infrastructure_nodes]
-infranode1.GUID.internal
-infranode2.GUID.internal
+infranode1.PLACEHOLDER_GUID.internal
+infranode2.PLACEHOLDER_GUID.internal
 [infrastructure_nodes:vars]
-openshift_node_labels="{'logging':'true','cluster': 'GUID', 'env':'infra'}"
+openshift_node_labels="{'logging':'true','cluster': 'PLACEHOLDER_GUID', 'env':'infra'}"
 
 [application_nodes]
-node1.GUID.internal openshift_node_labels="{'logging':'true','cluster': 'GUID', 'env':'app', 'client':'alpha'}"
-node2.GUID.internal openshift_node_labels="{'logging':'true','cluster': 'GUID', 'env':'app', 'client':'beta'}"
-node3.GUID.internal openshift_node_labels="{'logging':'true','cluster': 'GUID', 'env':'app', 'client':'common'}"
+node1.PLACEHOLDER_GUID.internal openshift_node_labels="{'logging':'true','cluster': 'PLACEHOLDER_GUID', 'env':'app', 'client':'alpha'}"
+node2.PLACEHOLDER_GUID.internal openshift_node_labels="{'logging':'true','cluster': 'PLACEHOLDER_GUID', 'env':'app', 'client':'beta'}"
+node3.PLACEHOLDER_GUID.internal openshift_node_labels="{'logging':'true','cluster': 'PLACEHOLDER_GUID', 'env':'app', 'client':'common'}"
 
 [nfs]
-support1.GUID.internal
+support1.PLACEHOLDER_GUID.internal
 
 [nodes:children]
 masters

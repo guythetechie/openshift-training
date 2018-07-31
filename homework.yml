@@ -16,4 +16,7 @@
       set_fact:
         guid: "{{guid_output.stdout}}"
     - name: Replace GUID in ansible inventory
-      shell: "sed -i \"s/GUID/{{guid}}/g\" {{default_inventory_file}}"
+      replace:
+        path: "{{default_inventory_file}}"
+        regexp: 'PLACEHOLDER_GUID'
+        replace: "{{guid}}"
