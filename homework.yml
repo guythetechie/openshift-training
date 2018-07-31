@@ -2,7 +2,7 @@
 - name: Generate inventory file on bastion
   hosts: localhost
   vars:
-    guid: temporaryvalue
+    guid: dummyavlue
     default_inventory_file: /etc/ansible/hosts
   tasks:
     - name: Copy inventory file from source
@@ -21,14 +21,37 @@
         regexp: 'PLACEHOLDER_GUID'
         replace: "{{guid}}"
 
-- name: Validate Docker configuration
+- name: Validate Docker configuration on nodes
   hosts: nodes
   tasks:
-    - name: Validate that Docker is installed on nodes
+    - name: Install Docker if necessary
       package:
         name: docker
         state: present
-    - name: Validate that Docker service is running
+    - name: Start Docker service if necessary
       service:
         name: docker
         state: started
+
+- name: Configure LDAP authentication
+  hosts: localhost
+  vars:
+    tempfilepath: dummyvalue
+    default_inventory_file: /etc/ansible/hosts
+  tasks:
+    - name: Create temporary file to hold certificate
+      tempfile:
+        state: file
+        register: tempfile_output
+    - name: Set temporary file path variable
+      set_fact:
+        tempfilepath: "{{tempfile_output.path}}"
+    - name: Download CA certificate
+      get_url:
+        url: http://ipa.shared.example.opentlc.com/ipa/config/ca.crt
+        dest: "{{tempfilepath}}"
+    - name: Replace CA certificate path in ansible inventory
+      replace:
+        path: "{{default_inventory_file}}"
+        regexp: 'PLACEHOLDER_CA_FILEPATH'
+        replace: "{{tempfilepath}}"
