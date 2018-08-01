@@ -114,12 +114,12 @@
 
 - name: Smoke test
   hosts: localhost
-  tasks:
+  tasks:  
     - name: Create new project
-      k8s:
-        api_version: v1
-        kind: project
-        name: smoke-test
+      oc:
         state: present
+        inline:
+          kind: project
+          name: smoke-test
 #    - name: Create Node.JS application
 #      shell: oc new-app nodejs-mongo-persistent
