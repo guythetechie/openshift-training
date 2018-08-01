@@ -65,13 +65,11 @@
         name: atomic-openshift-clients
         state: present
 
-- name: Check OpenShift pre-requisites
-  import_playbook: /usr/share/ansible/openshift-ansible/playbooks/prerequisites.yml
-  when: 1 == 2
+#- name: Check OpenShift pre-requisites
+#  import_playbook: /usr/share/ansible/openshift-ansible/playbooks/prerequisites.yml
 
-- name: Run OpenShift installer
-  import_playbook: /usr/share/ansible/openshift-ansible/playbooks/deploy_cluster.yml
-  when: 1 == 2
+#- name: Run OpenShift installer
+#  import_playbook: /usr/share/ansible/openshift-ansible/playbooks/deploy_cluster.yml
 
 - name: Copy .kube directory from master to bastion
   hosts: masters[0]
