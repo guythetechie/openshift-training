@@ -116,6 +116,10 @@
   hosts: localhost
   tasks:
     - name: Create new project
-      shell: oc new-project smoke-test
-    - name: Create Node.JS application
-      shell: oc new-app nodejs-mongo-persistent
+      k8s:
+        api_version: v1
+        kind: project
+        name: smoke-test
+        state: present
+#    - name: Create Node.JS application
+#      shell: oc new-app nodejs-mongo-persistent
