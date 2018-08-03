@@ -113,6 +113,7 @@
 
 - name: Deploy openshift-tasks app with Jenkins
   hosts: localhost
+  tasks:
     - name: Create Jenkins pipeline
       shell: "oc create -f {{playbook_dir}}/openshift-tasks-pipeline.yaml"
     - name: Start Jenkins pipeline to deploy openshift-tasks app
