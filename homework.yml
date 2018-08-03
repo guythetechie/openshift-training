@@ -102,3 +102,19 @@
       shell: oc new-project smoke-test
     - name: Create Node.JS application
       shell: oc new-app nodejs-mongo-persistent
+
+- name: Create CI/CD workflow
+  hosts: localhost
+  tasks:
+    - name: Create Jenkins project
+      shell: oc new-project jenkins
+    - name: Create Jenkins app
+      shell: oc new-app jenkins-persistent
+
+- name: Deploy openshift-tasks app with Jenkins
+    - name: Create Jenkins pipeline
+      shell: "oc create -f {{playbook_dir}}/openshift-tasks-pipeline.yaml"
+    - name: Start Jenkins pipeline to deploy openshift-tasks app
+      shell: oc start-build openshift-tasks-pipeline
+    - name: Configure HPA on app
+      shell: oc autoscale openshift-tasks-pipeline --min 1 --max 2 --cpu-percent=80
