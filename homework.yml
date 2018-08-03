@@ -21,23 +21,6 @@
         path: "{{default_inventory_file}}"
         regexp: 'PLACEHOLDER_GUID'
         replace: "{{guid}}"
-    - name: Create temporary file to hold LDAP certificate
-      tempfile:
-        state: file
-      register: tempfile_output
-    - name: Set LDAP CA file path variable
-      set_fact:
-        ldap_ca_path: "{{tempfile_output.path}}"
-    - name: Download CA certificate
-      get_url:
-        url: http://ipa.shared.example.opentlc.com/ipa/config/ca.crt
-        dest: "{{ldap_ca_path}}"
-        force: yes
-    - name: Replace CA certificate path in ansible inventory
-      replace:
-        path: "{{default_inventory_file}}"
-        regexp: 'PLACEHOLDER_CA_FILEPATH'
-        replace: "{{ldap_ca_path}}"
     - name: Reload inventory file to capture updates
       meta: refresh_inventory
 
@@ -65,44 +48,44 @@
         name: atomic-openshift-clients
         state: present
 
-#- name: Check OpenShift pre-requisites
-#  import_playbook: /usr/share/ansible/openshift-ansible/playbooks/prerequisites.yml
+- name: Check OpenShift pre-requisites
+  import_playbook: /usr/share/ansible/openshift-ansible/playbooks/prerequisites.yml
 
-#- name: Run OpenShift installer
-#  import_playbook: /usr/share/ansible/openshift-ansible/playbooks/deploy_cluster.yml
+- name: Run OpenShift installer
+  import_playbook: /usr/share/ansible/openshift-ansible/playbooks/deploy_cluster.yml
 
-#- name: Copy .kube directory from master to bastion
-#  hosts: masters[0]
-#  tasks:
-#    - name: Copy .kube directory
-#      fetch:
-#        src: /root/.kube/config
-#        dest: /root/.kube/config
-#        flat: yes
+- name: Copy .kube directory from master to bastion
+  hosts: masters[0]
+  tasks:
+    - name: Copy .kube directory
+      fetch:
+        src: /root/.kube/config
+        dest: /root/.kube/config
+        flat: yes
 
-#- name: Validate OSE admin login
-#  hosts: localhost
-#  tasks:
-#    - name: Validate that oc admin command returns systemadmin
-#      shell: oc whoami | grep system:admin
+- name: Validate OSE admin login
+  hosts: localhost
+  tasks:
+    - name: Validate that oc admin command returns systemadmin
+      shell: oc whoami | grep system:admin
 
-#- name: Create PVs on NFS server
-#  hosts: nfs
-#  tasks:
-#    - name: Create PVs
-#      script: "{{playbook_dir}}/scripts/create_pvs.sh"
-#    - name: Restart NFS service
-#      service:
-#          name: nfs-server
-#          state: restarted
+- name: Create PVs on NFS server
+  hosts: nfs
+  tasks:
+    - name: Create PVs
+      script: "{{playbook_dir}}/scripts/create_pvs.sh"
+    - name: Restart NFS service
+      service:
+          name: nfs-server
+          state: restarted
 
-#- name: Create PVs on OSE
-#  hosts: localhost
-#  tasks:
-#    - name: Create PV definition files
-#      script: "{{playbook_dir}}/scripts/create_pv_definitions.sh"
-#    - name: Create PVs
-#      shell: cat /root/pvs/* | oc create -f -
+- name: Create PVs on OSE
+  hosts: localhost
+  tasks:
+    - name: Create PV definition files
+      script: "{{playbook_dir}}/scripts/create_pv_definitions.sh"
+    - name: Create PVs
+      shell: cat /root/pvs/* | oc create -f -
 
 - name: Fix NFS persistent volume recycling
   hosts: nodes
@@ -114,12 +97,12 @@
 
 - name: Smoke test
   hosts: localhost
-  tasks:  
+  tasks:
     - name: Create new project
-      oc:
+      openshift_raw:
+        api_version: v1
+        kind: project
+        name: smoke-test
         state: present
-        inline:
-          kind: project
-          name: smoke-test
-#    - name: Create Node.JS application
-#      shell: oc new-app nodejs-mongo-persistent
+    - name: Create Node.JS application
+      shell: oc new-app nodejs-mongo-persistent
