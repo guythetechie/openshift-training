@@ -99,10 +99,6 @@
   hosts: localhost
   tasks:
     - name: Create new project
-      openshift_raw:
-        api_version: v1
-        kind: project
-        name: smoke-test
-        state: present
+      shell: oc new-project smoke-test
     - name: Create Node.JS application
       shell: oc new-app nodejs-mongo-persistent
